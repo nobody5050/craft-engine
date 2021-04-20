@@ -1,8 +1,3 @@
-/*const AdventurerLevels = require("../test/helpers/AdventurerLevels");
-const AgentLevels = require("../test/helpers/AgentLevels");
-const AquaticLevels = require("../test/helpers/AquaticLevels");
-const DesignerLevels = require("../test/helpers/DesignerLevels");*/
-
 levels = Object.assign({
   default: {
     instructions: "Nighttime is boring with no zombies (sheep at this time). Get the Zombies spawning at night, and get them to chase you.",
@@ -56,31 +51,9 @@ levels = Object.assign({
       "", "", "", "", "", "", "", "", "", "",
     ],
 
-    actionPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
+    actionPlane: new Array(100).fill(""),
 
-    fluffPlane: [
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-      "", "", "", "", "", "", "", "", "", "",
-    ],
+    fluffPlane: new Array(100).fill(""),
 
     failureCheckFunction: function (verificationAPI) {
       return false;
@@ -88,6 +61,18 @@ levels = Object.assign({
 
     verificationFunction: function (verificationAPI) {
       return false;
-    },
-  }
-}, AdventurerLevels, AgentLevels, AquaticLevels, DesignerLevels);
+    }
+  },
+  test01: {
+    isAgentLevel: false,
+    useAgent: false,
+    groundPlane: new Array(100).fill("grass"),
+    groundDecorationPlane: new Array(100).fill(""),
+    actionPlane: new Array(100).fill(""),
+    playerStartPosition: [0, 0],
+    playerStartDirection: 2,
+    verificationFunction: function (verificationAPI) {
+      return verificationAPI.isPlayerAt([0, 1]);
+    }
+  },
+}, AdventurerLevels, AgentLevels, AquaticLevels, DesignerLevels, FunctionalityLevel);
