@@ -156,4 +156,14 @@ DesignerLevels = {
       verificationAPI.isEntityDied("creeper")
     ),
   },
+  designer10: {
+    isEventLevel: true,
+    groundPlane: ["todo"],
+    groundDecorationPlane: ["todo"],
+    actionPlane: ["todo"],
+    usePlayer: true,
+    playerStartPosition: [0, 0],
+    playerSartDirection: 0,
+    //todo
+  },
 };
