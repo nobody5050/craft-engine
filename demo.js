@@ -1,19 +1,35 @@
+var previous = false;
+var playing = false;
+
+var levelselect = document.getElementById('level-load');
+var speedslider = document.getElementById('speed-slider');
+var speeddisplay = document.getElementById('speed-display');
+var phasergame = document.getElementById('phaser-game');
+var codemirroreditor = document.getElementById('codemirror-editor');
+
 var defaults = {
   assetPacks: {
     beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
     afterLoad: [],
   },
   gridDimensions: [10, 10],
-  fluffPlane: ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""],
+  fluffPlane: new Array(100).fill(''),
   playerName: 'Alex',
   playerStartPosition: [],
 };
 
+var codemirror = CodeMirror.fromTextArea(codemirroreditor, {
+  lineNumbers: true,
+  mode: 'javascript'
+});
+
+codemirror.setSize(640, document.getElementById('game').offsetHeight + 400);
+
 function getParameterByName(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
   var results = regex.exec(location.search);
-  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
 var levelParam = getParameterByName('level');
@@ -29,16 +45,13 @@ var gameController = new GameController({
   debug: true,
   earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
   earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
-  afterAssetsLoaded: () => {
-    gameController.codeOrgAPI.startAttempt();
-  },
+  afterAssetsLoaded: function () {},
 });
 
 gameController.loadLevel(testLevelToLoad);
-
-var levelselect = document.getElementById('level-load');
-var speedslider = document.getElementById('speed-slider');
-var speeddisplay = document.getElementById('speed-display');
+if (!gameController.levelData.isAgentLevel) {
+  document.getElementById('entity-select').style.display = "none";
+}
 
 Object.keys(levels).forEach(key => {
   var option = document.createElement('option');
@@ -56,8 +69,19 @@ document.addEventListener('input', function (event) {
   }
 }, false);
 
-document.getElementById('reset-button').addEventListener("click", function () {
+document.getElementById('stop-button').addEventListener('click', function () {
   gameController.codeOrgAPI.resetAttempt();
+  previous = false;
+  playing = false;
+});
+
+document.getElementById('play-button').addEventListener('click', function () {
+  if (previous) {
+    gameController.codeOrgAPI.resetAttempt();
+  }
+  previous = true;
+  playing = true;
+  eval(codemirror.getValue());
   gameController.codeOrgAPI.startAttempt();
 });
 
@@ -65,11 +89,10 @@ if (!gameController.levelData.isAgentLevel) {
   document.getElementById('entity-select').style.display = "none";
 }
 
-window.addEventListener('keydown', function (event) {
-  if (event.target !== document.body) {
-    event.preventDefault();
+document.addEventListener('keydown', function (event) {
+  if (!playing) {
+    return;
   }
-  event.stopImmediatePropagation();
 
   var target = document.querySelector('input[name=target]:checked').value;
   var instance = target === 'Player' ? gameController.player : gameController.agent;
@@ -78,35 +101,29 @@ window.addEventListener('keydown', function (event) {
     return;
   }
 
-  switch (event.keyCode) {
-    case 8:
-    case 46:
+  switch (event.key) {
+    case "Backspace":
       gameController.codeOrgAPI.destroyBlock(null, target);
       break;
-    case 13:
-    case 32:
+    case " ":
       gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
       break;
-    case 16:
+    case "Shift":
       document.querySelector('input[name=target]:not(:checked)').checked = true;
       break;
-    case 38:
-    case 87:
-      gameController.codeOrgAPI.moveDirection(null, target, 0);
+    case "w":
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.North);
       break;
-    case 40:
-    case 83:
-      gameController.codeOrgAPI.moveDirection(null, target, 2);
+    case "a":
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.East);
       break;
-    case 37:
-    case 65:
-      gameController.codeOrgAPI.moveDirection(null, target, 3);
+    case "s":
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.South);
       break;
-    case 39:
-    case 68:
-      gameController.codeOrgAPI.moveDirection(null, target, 1);
+    case "d":
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.West);
       break;
   }
-}, true);
+}, false);
 
 window.gameController = gameController;
