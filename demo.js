@@ -1,5 +1,3 @@
-/* global $, GameController, levels, Sounds */
-
 var defaults = {
   assetPacks: {
     beforeLoad: ['allAssetsMinusPlayer', 'playerAlex', 'playerAgent'],
@@ -13,8 +11,8 @@ var defaults = {
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+  var results = regex.exec(location.search);
   return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
@@ -38,52 +36,58 @@ var gameController = new GameController({
 
 gameController.loadLevel(testLevelToLoad);
 
-var $levelselect = $('#level-load');
+var levelselect = document.getElementById('level-load');
+var speedslider = document.getElementById('speed-slider');
+var speeddisplay = document.getElementById('speed-display');
+
 Object.keys(levels).forEach(key => {
-  $levelselect.append($('<option/>', {text: key, selected: key === levelParam}));
+  var option = document.createElement('option');
+  option.text = key;
+  option.selected = key === levelParam;
+  levelselect.appendChild(option);
 });
 
-$levelselect.on('change', () => {
-  location.search = `level=${$levelselect.val()}`;
-});
+document.addEventListener('input', function (event) {
+  if (event.target.id == 'level-load') {
+    location.search = `level=${levelselect.options[levelselect.selectedIndex].value}`;
+  } else if (event.target.id == 'speed-slider') {
+    speeddisplay.innerHTML = `Speed:${speedslider.value}x`;
+    gameController.game.time.slowMotion = 1.5 / Number.parseFloat(speedslider.value, 10);
+  }
+}, false);
 
-$('input[type=range]').on('input', function () {
-  $("#speed-display").html('Speed: ' + $(this).val() + 'x');
-  gameController.game.time.slowMotion = 1.5 / parseFloat($(this).val(), 10);
-});
-
-$('#reset-button').click(function () {
+document.getElementById('reset-button').addEventListener("click", function () {
   gameController.codeOrgAPI.resetAttempt();
   gameController.codeOrgAPI.startAttempt();
 });
 
 if (!gameController.levelData.isAgentLevel) {
-  $('#entity-select').hide();
+  document.getElementById('entity-select').style.display = "none";
 }
 
-window.addEventListener('keydown', e => {
-  if (e.target !== document.body) {
-    e.preventDefault();
+window.addEventListener('keydown', function (event) {
+  if (event.target !== document.body) {
+    event.preventDefault();
   }
-  e.stopImmediatePropagation();
+  event.stopImmediatePropagation();
 
-  var target = $('input[name=target]:checked').val();
+  var target = document.querySelector('input[name=target]:checked').value;
   var instance = target === 'Player' ? gameController.player : gameController.agent;
 
   if (instance.queue.getLength() > 0) {
     return;
   }
 
-  switch (e.keyCode) {
+  switch (event.keyCode) {
     case 8:
     case 46:
       gameController.codeOrgAPI.destroyBlock(null, target);
       break;
     case 13:
-      gameController.codeOrgAPI.placeInFront(null, $('#block-type').val(), target);
+      gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
       break;
     case 16:
-      $('input[name=target]:not(:checked)').prop('checked', true);
+      document.querySelector('input[name=target]:not(:checked)').checked = true;
       break;
     case 38:
     case 87:
