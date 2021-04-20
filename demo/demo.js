@@ -84,6 +84,7 @@ window.addEventListener('keydown', function (event) {
       gameController.codeOrgAPI.destroyBlock(null, target);
       break;
     case 13:
+    case 32:
       gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
       break;
     case 16:
