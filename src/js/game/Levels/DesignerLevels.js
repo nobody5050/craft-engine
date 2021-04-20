@@ -162,8 +162,9 @@ DesignerLevels = {
     groundDecorationPlane: ["todo"],
     actionPlane: ["todo"],
     usePlayer: true,
-    playerStartPosition: [0, 0],
+    playerStartPosition: [6, 7],
     playerSartDirection: 0,
+    levelVerificationTimeout: 20000,
     //todo
   },
 };
