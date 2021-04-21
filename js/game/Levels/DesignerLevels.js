@@ -156,4 +156,27 @@ DesignerLevels = {
       verificationAPI.isEntityDied("creeper")
     ),
   },
+  designer10: {
+    isEventLevel: true,
+    groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",],
+    groundDecorationPlane: ["todo"],
+    actionPlane: ["todo"],
+    usePlayer: true,
+    playerStartPosition: [6, 7],
+    playerSartDirection: 0,
+    levelVerificationTimeout: 20000,
+    timeoutResult: () => false,
+    verificationFunction: verificationAPI  => (
+      (verificationAPI.getEntityCount("zombie") >= 3 && verificationAPI.isEntityDied("zombie"))
+    ),
+  },
 };
