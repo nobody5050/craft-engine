@@ -18,9 +18,8 @@ xml {
   display: none;
 }
 
-#codemirror-div, #codemirror-editor {
-  height: 640px;
-  width: 640px;
+#game {
+  margin-right: 1em;
 }
 
 #game {
