@@ -27,3 +27,13 @@ xml {
   padding: 1em;
   background-color: #777777;
 }
+
+#console-pre {
+  height: 200px;
+  background-color: white;
+  overflow: auto;
+  word-break: normal !important;
+  word-wrap: normal !important;
+  white-space: pre !important;
+}
+

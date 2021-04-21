@@ -9,6 +9,8 @@ var codemirroreditor = document.getElementById('codemirror-editor');
 var game = document.getElementById('game');
 var body = document.body;
 var playbutton = document.getElementById('play-button');
+var consolepre = document.getElementById('console-pre');
+var consoleerrors = document.getElementById('console-errors');
 
 var defaults = {
   assetPacks: {
@@ -26,17 +28,19 @@ var codemirror = CodeMirror.fromTextArea(codemirroreditor, {
   mode: 'javascript'
 });
 
-codemirror.setSize(body.clientWidth - Number.parseInt(getComputedStyle(body).fontSize) * 2 - game.offsetWidth, game.offsetHeight + 400);
+var rightwidth = body.clientWidth - Number.parseInt(getComputedStyle(body).fontSize) * 2 - game.offsetWidth;
+
+codemirror.setSize(rightwidth, game.offsetHeight + 200);
+consoleerrors.style.width = rightwidth;
+consolepre.style.width = rightwidth;
+consoleerrors.style.height = 200;
+consolepre.style.height = 200;
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
   var regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
   var results = regex.exec(location.search);
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-
-function requestLock() {
-  gameController.game.input.mouse.requestPointerLock();
 }
 
 var levelParam = getParameterByName('level');
@@ -53,6 +57,18 @@ var gameController = new GameController({
   earlyLoadAssetPacks: testLevelToLoad.earlyLoadAssetPacks,
   earlyLoadNiceToHaveAssetPacks: testLevelToLoad.earlyLoadNiceToHaveAssetPacks,
   afterAssetsLoaded: function () {},
+});
+
+var api = Object.assign(gameController.codeOrgAPI, {
+  log: function (msg) {
+    consoleerrors.innerText += '[LOG] ' + msg + '\n';
+  },
+  error: function (msg) {
+    consoleerrors.innerText += '[ERR] ' + msg + '\n';
+  },
+  warning: function (msg) {
+    consoleerrors.innerText += '[WARN] ' + msg + '\n';
+  }
 });
 
 gameController.loadLevel(testLevelToLoad);
@@ -74,21 +90,33 @@ document.addEventListener('input', function (event) {
 }, false);
 
 document.getElementById('stop-button').addEventListener('click', function () {
-  gameController.codeOrgAPI.resetAttempt();
+  api.resetAttempt();
   previous = false;
   playing = false;
 });
 
 playbutton.addEventListener('click', function () {
   if (previous) {
-    gameController.codeOrgAPI.resetAttempt();
+    api.resetAttempt();
   }
   previous = true;
   playing = true;
   playbutton.blur();
   phasergame.focus();
-  eval(codemirror.getValue());
-  gameController.codeOrgAPI.startAttempt();
+  gameController.game.canvas.id = 'game-canvas';
+  try {
+    new Function('api', `'use strict'; ${codemirror.getValue()}`)(api);
+  } catch (err) {
+    consoleerrors.innerText += '[ERR] ' + err + '\n';
+    consolepre.scrollTop = consolepre.scrollHeight - consolepre.clientHeight;
+  }
+  api.startAttempt();
+});
+
+document.addEventListener('click', function (event) {
+  if (event.target.id != gameController.game.canvas.id) {
+    playing = false;
+  }
 });
 
 document.addEventListener('keydown', function (event) {
@@ -105,12 +133,10 @@ document.addEventListener('keydown', function (event) {
 
   switch (event.key) {
     case "Backspace":
-      gameController.codeOrgAPI.destroyBlock(null, target);
+      api.destroyBlock(null, target);
       break;
     case " ":
-      gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
+      api.placeInFront(null, document.getElementById('block-type').value, target);
       break;
   }
 }, false);
-
-window.gameController = gameController;
