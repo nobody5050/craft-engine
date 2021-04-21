@@ -8,6 +8,7 @@ var phasergame = document.getElementById('phaser-game');
 var codemirroreditor = document.getElementById('codemirror-editor');
 var game = document.getElementById('game');
 var body = document.body;
+var playbutton = document.getElementById('play-button');
 
 var defaults = {
   assetPacks: {
@@ -32,6 +33,10 @@ function getParameterByName(name) {
   var regex = new RegExp(`[\\?&]${name}=([^&#]*)`);
   var results = regex.exec(location.search);
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+function requestLock() {
+  gameController.game.input.mouse.requestPointerLock();
 }
 
 var levelParam = getParameterByName('level');
@@ -74,12 +79,14 @@ document.getElementById('stop-button').addEventListener('click', function () {
   playing = false;
 });
 
-document.getElementById('play-button').addEventListener('click', function () {
+playbutton.addEventListener('click', function () {
   if (previous) {
     gameController.codeOrgAPI.resetAttempt();
   }
   previous = true;
   playing = true;
+  playbutton.blur();
+  phasergame.focus();
   eval(codemirror.getValue());
   gameController.codeOrgAPI.startAttempt();
 });
@@ -102,18 +109,6 @@ document.addEventListener('keydown', function (event) {
       break;
     case " ":
       gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
-      break;
-    case "w":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.North);
-      break;
-    case "a":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.West);
-      break;
-    case "s":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.South);
-      break;
-    case "d":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.East);
       break;
   }
 }, false);
