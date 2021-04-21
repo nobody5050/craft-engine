@@ -166,6 +166,6 @@ DesignerLevels = {
     playerStartPosition: [6, 7],
     playerSartDirection: 0,
     levelVerificationTimeout: 20000,
-    //todo
+    timeoutResult: () => false,
   },
 };
