@@ -251,9 +251,13 @@ class GameController {
     }
 
     const keysToMovementState = {
+      [Phaser.Keyboard.UP]: FacingDirection.North,
       [Phaser.Keyboard.W]: FacingDirection.North,
+      [Phaser.Keyboard.RIGHT]: FacingDirection.East,
       [Phaser.Keyboard.D]: FacingDirection.East,
+      [Phaser.Keyboard.DOWN]: FacingDirection.South,
       [Phaser.Keyboard.S]: FacingDirection.South,
+      [Phaser.Keyboard.LEFT]: FacingDirection.West,
       [Phaser.Keyboard.A]: FacingDirection.West,
       [Phaser.Keyboard.SPACEBAR]: -2
     };
