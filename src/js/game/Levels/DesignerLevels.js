@@ -158,7 +158,8 @@ DesignerLevels = {
   },
   designer10: {
     isEventLevel: true,
-    groundPlane: ["todo"],
+    groundPlane: ["grass","grass","grass","grass","grass","grass","grass","grass","grass","grass",
+                  "grass"],
     groundDecorationPlane: ["todo"],
     actionPlane: ["todo"],
     usePlayer: true,
