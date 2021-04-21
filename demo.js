@@ -49,9 +49,6 @@ var gameController = new GameController({
 });
 
 gameController.loadLevel(testLevelToLoad);
-if (!gameController.levelData.isAgentLevel) {
-  document.getElementById('entity-select').style.display = "none";
-}
 
 Object.keys(levels).forEach(key => {
   var option = document.createElement('option');
@@ -64,7 +61,7 @@ document.addEventListener('input', function (event) {
   if (event.target.id == 'level-load') {
     location.search = `level=${levelselect.options[levelselect.selectedIndex].value}`;
   } else if (event.target.id == 'speed-slider') {
-    speeddisplay.innerHTML = `Speed:${speedslider.value}x`;
+    speeddisplay.innerHTML = `Speed: ${speedslider.value}x`;
     gameController.game.time.slowMotion = 1.5 / Number.parseFloat(speedslider.value, 10);
   }
 }, false);
@@ -85,16 +82,12 @@ document.getElementById('play-button').addEventListener('click', function () {
   gameController.codeOrgAPI.startAttempt();
 });
 
-if (!gameController.levelData.isAgentLevel) {
-  document.getElementById('entity-select').style.display = "none";
-}
-
 document.addEventListener('keydown', function (event) {
   if (!playing) {
     return;
   }
 
-  var target = document.querySelector('input[name=target]:checked').value;
+  var target = 'Player';
   var instance = target === 'Player' ? gameController.player : gameController.agent;
 
   if (instance.queue.getLength() > 0) {
@@ -108,20 +101,17 @@ document.addEventListener('keydown', function (event) {
     case " ":
       gameController.codeOrgAPI.placeInFront(null, document.getElementById('block-type').value, target);
       break;
-    case "Shift":
-      document.querySelector('input[name=target]:not(:checked)').checked = true;
-      break;
     case "w":
       gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.North);
       break;
     case "a":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.East);
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.West);
       break;
     case "s":
       gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.South);
       break;
     case "d":
-      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.West);
+      gameController.codeOrgAPI.moveDirection(null, target, FacingDirection.East);
       break;
   }
 }, false);
