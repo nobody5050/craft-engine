@@ -6,6 +6,8 @@ var speedslider = document.getElementById('speed-slider');
 var speeddisplay = document.getElementById('speed-display');
 var phasergame = document.getElementById('phaser-game');
 var codemirroreditor = document.getElementById('codemirror-editor');
+var game = document.getElementById('game');
+var body = document.body;
 
 var defaults = {
   assetPacks: {
@@ -23,7 +25,7 @@ var codemirror = CodeMirror.fromTextArea(codemirroreditor, {
   mode: 'javascript'
 });
 
-codemirror.setSize(640, document.getElementById('game').offsetHeight + 400);
+codemirror.setSize(body.clientWidth - Number.parseInt(getComputedStyle(body).fontSize) * 2 - game.offsetWidth, game.offsetHeight + 400);
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
