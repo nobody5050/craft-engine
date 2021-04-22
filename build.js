@@ -66,7 +66,7 @@ function do_prod(src, levels)
 
 	if (minified_src.error)
 	{
-		console.error(`Error minifying: ${result.error}`);
+		console.error(`Error minifying: ${minified_src.error}`);
 		return -1;
 	}
 	fs.mkdirSync("./build/js/", {
@@ -80,7 +80,7 @@ function do_prod(src, levels)
 
 	if (minified_levels.error)
 	{
-		console.error(`Error minifying levels: ${result.error}`);
+		console.error(`Error minifying levels: ${minified_levels.error}`);
 		return -2;
 	}
 

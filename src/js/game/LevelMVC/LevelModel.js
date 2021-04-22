@@ -962,7 +962,7 @@ class LevelModel {
 			let x = currentTorch.x;
 			let y = currentTorch.y;
 			for (let yIndex = currentTorch.y - 2; yIndex <= (y + 2); ++yIndex) {
-				for (vletar xIndex = currentTorch.x - 2; xIndex <= (x + 2); ++xIndex) {
+				for (let xIndex = currentTorch.x - 2; xIndex <= (x + 2); ++xIndex) {
 
 					let position = new Position(xIndex, yIndex);
 
