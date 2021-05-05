@@ -14,7 +14,7 @@ class BaseCommand {
 
 	begin() {
 		if (this.HighlightCallback) {
-			this.HighlightCallback();
+			this.HighlightCallback(this.target);
 		}
 		this.state = CommandState.WORKING;
 	}

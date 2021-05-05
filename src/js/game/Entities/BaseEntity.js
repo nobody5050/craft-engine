@@ -467,9 +467,6 @@ class BaseEntity {
 
 	turnRandom(commandQueueItem) {
 		this.controller.addCommandRecord("turnRandom", this.type, commandQueueItem.repeat);
-		var getRandomInt = function (min, max) {
-			return Math.floor(Math.random() * (max - min + 1)) + min;
-		};
 		var direction = getRandomInt(0, 1) === 0 ? 1 : -1;
 		this.turn(commandQueueItem, direction, false);
 	}
