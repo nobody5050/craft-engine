@@ -10,7 +10,7 @@
  * @param {boolean} [bubbles=false]
  * @param {boolean} [cancelable=false]
  */
-createEvent = function createEvent(type, bubbles = false, cancelable = false) {
+function createEvent(type, bubbles = false, cancelable = false) {
 	var customEvent;
 	try {
 		customEvent = new Event(type, { bubbles, cancelable });
@@ -19,10 +19,18 @@ createEvent = function createEvent(type, bubbles = false, cancelable = false) {
 		customEvent.initEvent(type, bubbles, cancelable);
 	}
 	return customEvent;
-};
+}
 
-bisect = function bisect(array, conditional) {
+function bisect(array, conditional) {
 	const positive = array.filter(x => conditional(x));
 	const negative = array.filter(x => !conditional(x));
 	return [positive, negative];
-};
+}
+
+function isBaseObject(obj) {
+	return obj instanceof Object && obj.constructor === Object;
+}
+
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}

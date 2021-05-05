@@ -120,23 +120,26 @@ class LevelEntity {
 		return false;
 	}
 
-	spawnEntity(type, spawnDirection) {
-		let getRandomInt = function (min, max) {
-			return Math.floor(Math.random() * (max - min + 1)) + min;
-		};
+	spawnEntity(type, spawnPos) {
 		let levelModel = this.controller.levelModel;
 		let width = levelModel.planeWidth;
 		let height = levelModel.planeHeight;
-		if (spawnDirection === "middle") {
-			if (this.isSpawnableInBetween(Math.floor(0.25 * width), Math.floor(0.25 * height), Math.floor(0.75 * width), Math.floor(0.75 * height))) {
-				let position = new Position(
-					getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)),
-					getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))
+		let maxWidth = Math.floor(width  * 0.85);
+		let maxHeight = Math.floor(height * 0.85);
+		let minWidth = Math.floor(width  * 0.15);
+		let minHeight = Math.floor(height * 0.15);
+		let position = null;
+		let isEmpty = [false];
+		if (spawnPos === "random" || !(isBaseObject(spawnPos) && !isNaN(spawnPos.x) && !isNaN(spawnPos.y))) {
+			if (this.isSpawnableInBetween(minWidth, minHeight, maxWidth, maxHeight)) {
+				position = new Position(
+					getRandomInt(minWidth, maxWidth),
+					getRandomInt(minHeight, maxHeight)
 				);
 				while (!levelModel.isPositionEmpty(position)[0]) {
 					position = new Position(
-						getRandomInt(Math.floor(0.25 * width), Math.floor(0.75 * width)),
-						getRandomInt(Math.floor(0.25 * height), Math.floor(0.75 * height))
+						getRandomInt(minWidth, maxWidth),
+						getRandomInt(minHeight, maxHeight)
 					);
 				}
 				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
@@ -156,93 +159,21 @@ class LevelEntity {
 				}
 				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
 			}
-		} else if (spawnDirection === "left") {
-			let xIndex = 0;
-			let columnFull = true;
-			while (xIndex < width && columnFull) {
-				columnFull = true;
-				for (let i = 0; i < height; i++) {
-					if (levelModel.isPositionEmpty(new Position(xIndex, i))[0]) {
-						columnFull = false;
-						break;
-					}
-				}
-				if (columnFull) {
-					xIndex++;
-				}
+		} else if (isBaseObject(spawnPos)) {
+			/*
+			 * Notes:
+			 *  + Here we use the "obsolete" isNaN instead of Number.isNaN on purpose because
+			 *    Number.isNaN only returns true for the Number(NaN)
+			 *  + We don't freeze spawnPos since we use it as an output value too.
+			 * 
+			 */
+			if (isNaN(spawnPos.rot)) {
+				spawnPos.rot = getRandomInt(0, 3);
 			}
-			if (xIndex < width) {
-				let position = new Position(xIndex, getRandomInt(0, height - 1));
-				while (!levelModel.isPositionEmpty(position)[0]) {
-					position = new Position(xIndex, getRandomInt(0, height - 1));
-				}
-				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
-			}
-		} else if (spawnDirection === "right") {
-			let xIndex = width - 1;
-			let columnFull = true;
-			while (xIndex > -1 && columnFull) {
-				columnFull = true;
-				for (let i = 0; i < height; i++) {
-					if (levelModel.isPositionEmpty(new Position(xIndex, i))[0]) {
-						columnFull = false;
-						break;
-					}
-				}
-				if (columnFull) {
-					xIndex--;
-				}
-			}
-			if (xIndex > -1) {
-				let position = new Position(xIndex, getRandomInt(0, height - 1));
-				while (!levelModel.isPositionEmpty(position)[0]) {
-					position = new Position(xIndex, getRandomInt(0, height - 1));
-				}
-				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
-			}
-		} else if (spawnDirection === "up") {
-			let yIndex = 0;
-			let rowFull = true;
-			while (yIndex < height && rowFull) {
-				rowFull = true;
-				for (let i = 0; i < width; i++) {
-					if (levelModel.isPositionEmpty(new Position(i, yIndex))[0]) {
-						rowFull = false;
-						break;
-					}
-				}
-				if (rowFull) {
-					yIndex++;
-				}
-			}
-			if (yIndex < height) {
-				let position = new Position(getRandomInt(0, height - 1), yIndex);
-				while (!levelModel.isPositionEmpty(position)[0]) {
-					position = new Position(getRandomInt(0, height - 1), yIndex);
-				}
-				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
-			}
-		} else if (spawnDirection === "down") {
-			let yIndex = height - 1;
-			let rowFull = true;
-			while (yIndex > -1 && rowFull) {
-				rowFull = true;
-				for (let i = 0; i < width; i++) {
-					if (levelModel.isPositionEmpty(new Position(i, yIndex))[0]) {
-						rowFull = false;
-						break;
-					}
-				}
-				if (rowFull) {
-					yIndex--;
-				}
-			}
-			if (yIndex > -1) {
-				let position = new Position(getRandomInt(0, height - 1), yIndex);
-				while (!levelModel.isPositionEmpty(position)[0]) {
-					position = new Position(getRandomInt(0, height - 1), yIndex);
-				}
-				return this.createEntity(type, this.id++, position.x, position.y, getRandomInt(0, 3));
+			position = new Position(spawnPos.x, spawnPos.y);
+			isEmpty = levelModel.isPositionEmpty(position);
+			if (isEmpty[0]) {
+				return this.createEntity(type, this.id++, position.x, position.y, spawnPos.rot);
 			}
 		}
 		return null;
