@@ -31,6 +31,11 @@ class CodeOrgAPI {
 	 * @param {Event} event - The fired event.
 	 */
 
+	/**
+	 * Create a new API instance for a game controller.
+	 * @hideconstructor
+	 * @param {GameController} - Game controller object.
+	 */
 	constructor (controller) {
 		this.controller = controller;
 	}
