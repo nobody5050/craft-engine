@@ -74,5 +74,5 @@ levels = Object.assign({
 		verificationFunction: function (verificationAPI) {
 			return verificationAPI.isPlayerAt([0, 1]);
 		}
-	},
+	}
 }, AdventurerLevels, AgentLevels, AquaticLevels, DesignerLevels, FunctionalityLevel);

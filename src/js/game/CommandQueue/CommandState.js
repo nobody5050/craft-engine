@@ -1,4 +1,4 @@
-CommandState = Object.freeze({
+const CommandState = Object.freeze({
 	NOT_STARTED: 0,
 	WORKING: 1,
 	SUCCESS: 2,

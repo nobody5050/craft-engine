@@ -25,7 +25,7 @@ class GameController {
 		 * @public {Object} codeOrgAPI - API with externally-callable methods for
 		 * starting an attempt, issuing commands, etc.
 		 */
-		this.codeOrgAPI = getCodeOrgAPI(this);
+		this.codeOrgAPI = new CodeOrgAPI(this);
 
 		var Phaser = gameControllerConfig.Phaser;
 
@@ -115,7 +115,7 @@ class GameController {
 	 * @param {Object} levelConfig
 	 */
 	loadLevel(levelConfig) {
-		this.levelData = Object.freeze(levelConfig);
+		this.levelData = Object.assign(levelConfig);
 
 		this.levelEntity = new LevelEntity(this);
 		this.levelModel = new LevelModel(this.levelData, this);

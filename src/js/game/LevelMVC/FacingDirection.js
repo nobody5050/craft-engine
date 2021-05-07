@@ -1,3 +1,11 @@
+/**
+ * Enum for facing directions and utilities.
+ * @namespace
+ * @property {number} North - Facing north.
+ * @property {number} East - Facing east.
+ * @property {number} South - Facing south.
+ * @property {number} West - Facing west.
+ */
 const FacingDirection = Object.freeze({
 	North: 0,
 	East: 1,
