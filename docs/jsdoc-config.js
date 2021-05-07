@@ -27,8 +27,6 @@ module.exports = {
 		"default": {
 			"includeDate": false
 		},
-		"systemName": "Craft",
-		"copyright": "Copyright 2021-<script>document.write(new Date().getFullYear());</script> craft-devs.",
 		"search": false,
 		"includeDate": false
 	}

@@ -179,8 +179,8 @@ class LevelEntity {
 		return null;
 	}
 
-	spawnEntityAt(type, x, y, facing) {
-		return this.createEntity(type, this.id++, x, y, facing);
+	spawnEntityAt(type, spawnPos) {
+		return this.createEntity(type, this.id++, spawnPos.x, spawnPos.y, spawnPos.rot);
 	}
 
 	destroyEntity(identifier) {

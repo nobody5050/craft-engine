@@ -19,10 +19,36 @@ class CodeOrgAPI {
 	 */
 
 	/**
+	 * @typedef {Object} SpawnPos
+	 * @property {number} x
+	 * @property {number} y
+	 * @property {?FacingDirection} rot
+	 */
+
+	/**
+	 * Entity ID or <code>"Player"</code>.
+	 * @typedef {(number|string)} TargetId
+	 */
+
+	/**
+	 * @typedef {
+	 * 	"sheep"|"zombie"|"ironGolem"|"creeper"|"cow"|"chicken"|
+	 * 	"cod"|"dolphin"|"ghast"|"boat"|"salmon"|"seaTurtle"|"squid"|
+	 * "tropicalFish"|"Player"|"PlayerAgent"
+	 * } TargetType
+	 */
+
+	/**
+	 * @typedef {Object} Event
+	 * @property {EventType} eventType
+	 * @property {?TargetType} targetType
+	 * @property {?TargetId} targetIdentifier
+	 */
+
+	/**
 	 * Highlight callback - You probably don't want to use this callback,
-	 * use @{link eventCallback event callbacks} instead.
+	 * use {@link eventCallback event callbacks} instead.
 	 * @callback highlightCallback
-	 * @param {Object} [entity] - Target entity.
 	 */
 
 	/**
@@ -108,8 +134,8 @@ class CodeOrgAPI {
 	 * Adds an event listener that is called only when the event fired is of
 	 * type <code>eventType</code>, and the target target is of type <code>targetType</code>.
 	 * @param {highlightCallback} highlightCallback
-	 * @param {EventType} eventType
 	 * @param {TargetType} targetType
+	 * @param {EventType} eventType
 	 * @param {Function} callback
 	 */
 	onEventTriggered(highlightCallback, targetType, eventType, callback) {
@@ -124,14 +150,14 @@ class CodeOrgAPI {
 
 	// Helper functions for event
 	isEventTriggered(event, eventType) {
-		return(event.eventType === eventType);
+		return event.eventType === eventType;
 	}
 
 	/* Command list - TODO: Document this */
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 * @param {FacingDirection} direction - Direction to move the entity.
 	 */
 	moveDirection(highlightCallback, targetEntity, direction) {
@@ -140,8 +166,9 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
-	 * @param {Funtion} onFinish - TODO.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 * @param {Funtion} onFinish - Called if the command was executed
+	 * successfully.
 	 */
 	moveForward(highlightCallback, targetEntity, onFinish) {
 		this.controller.addCommand(new MoveForwardCommand(this.controller, highlightCallback, targetEntity, onFinish), targetEntity);
@@ -149,7 +176,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	moveBackward(highlightCallback, targetEntity) {
 		this.controller.addCommand(new MoveBackwardCommand(this.controller, highlightCallback, targetEntity), targetEntity);
@@ -157,7 +184,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 * @param {number} moveAwayFrom - Entity ID to move away from.
 	 */
 	moveAway(highlightCallback, targetEntity, moveAwayFrom) {
@@ -169,7 +196,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 * @param {number} moveTowardTo - Entity ID to move towards.
 	 */
 	moveToward(highlightCallback, targetEntity, moveTowardTo) {
@@ -181,7 +208,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	flashEntity(highlightCallback, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -192,7 +219,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	explodeEntity(highlightCallback, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -203,7 +230,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	use(highlightCallback, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -214,8 +241,8 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param sound - TODO.
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {string} sound - Name of the sound to play.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	playSound(highlightCallback, sound, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -227,8 +254,9 @@ class CodeOrgAPI {
 	/**
 	 * @param {highlightCallback} highlightCallback
 	 * @param {string} direction - Direction to turn to.
-	 * @param {number} targetEntity - Target entity ID.
-	 * @param {Function} onFinish - TODO.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 * @param {Function} onFinish - Called if the command was executed
+	 * successfully.
 	 */
 	turn(highlightCallback, direction, targetEntity, onFinish) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -239,7 +267,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	turnRandom(highlightCallback, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -250,8 +278,9 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
-	 * @param {Function} onFinish - TODO.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 * @param {Function} onFinish - Called if the command was executed
+	 * successfully.
 	 */
 	turnRight(highlightCallback, targetEntity, onFinish) {
 		this.turn(highlightCallback, "right", targetEntity, onFinish);
@@ -259,8 +288,9 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
-	 * @param {Function} onFinish - TODO.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 * @param {Function} onFinish - Called if the command was executed
+	 * successfully.
 	 */
 	turnLeft(highlightCallback, targetEntity, onFinish) {
 		this.turn(highlightCallback, "left", targetEntity, onFinish);
@@ -268,7 +298,7 @@ class CodeOrgAPI {
 
 	/**
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	destroyBlock(highlightCallback, targetEntity) {
 		const callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
@@ -280,7 +310,7 @@ class CodeOrgAPI {
 	/**
 	 * @param {highlightCallback} highlightCallback
 	 * @param {number} blockType - Block type to place.
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	placeBlock(highlightCallback, blockType, targetEntity) {
 		this.controller.addCommand(new PlaceBlockCommand(this.controller, highlightCallback, blockType, targetEntity), targetEntity);
@@ -289,7 +319,7 @@ class CodeOrgAPI {
 	/**
 	 * @param {highlightCallback} highlightCallback
 	 * @param {number} blockType - Block type to place.
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 * @param {FacingDirecion} - Direction to place the block.
 	 */
 	placeDirection(highlightCallback, blockType, targetEntity, direction) {
@@ -299,16 +329,16 @@ class CodeOrgAPI {
 	/**
 	 * @param {highlightCallback} highlightCallback
 	 * @param {number} blockType - Block type to place.
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	placeInFront(highlightCallback, blockType, targetEntity) {
 		this.controller.addCommand(new PlaceInFrontCommand(this.controller, highlightCallback, blockType, targetEntity), targetEntity);
 	}
 
 	/**
-	 * TODO.
+	 * Make an entity till the soil.
 	 * @param {highlightCallback} highlightCallback
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 */
 	tillSoil(highlightCallback, targetEntity) {
 		this.controller.addCommand(new PlaceInFrontCommand(this.controller, highlightCallback, "watering", targetEntity));
@@ -317,41 +347,75 @@ class CodeOrgAPI {
 	/**
 	 * @param {highlightCallback} highlightCallback
 	 * @param {number} blockType - Block type to place.
-	 * @param {number} targetEntity - Target entity ID.
+	 * @param {TargetId} targetEntity - Target entity ID.
 	 * @param {Function} codeBlock - Callback.
 	 */
 	ifBlockAhead(highlightCallback, blockType, targetEntity, codeBlock) {
 		this.controller.addCommand(new IfBlockAheadCommand(this.controller, highlightCallback, blockType, targetEntity, codeBlock), targetEntity);
 	}
 
-	// -1 for infinite repeat
+	/**
+	 * @param {highlightCallback} highlightCallback
+	 * @param {Function} codeBlock - Code to repeat.
+	 * @param {number} iteration - Number of times to repeat, <code>-1</code>
+	 * for infinite repeat.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	repeat(highlightCallback, codeBlock, iteration, targetEntity) {
 		this.controller.addCommand(new RepeatCommand(this.controller, highlightCallback, codeBlock, iteration, targetEntity));
 	}
 
-	// -1 for infinite repeat
+	/**
+	 * @param {highlightCallback} highlightCallback
+	 * @param {Function} codeBlock - Code to repeat.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	repeatRandom(highlightCallback, codeBlock, targetEntity) {
 		var maxIteration = 10;
 		var randomIteration = Math.floor(Math.random() * maxIteration) + 1;
 		this.controller.addCommand(new RepeatCommand(this.controller, highlightCallback, codeBlock, randomIteration, targetEntity));
 	}
 
+	/**
+	 * Get screenshot as a data URL.
+	 * @returns {String} The data URL.
+	 */
 	getScreenshot() {
 		return this.controller.getScreenshot();
 	}
 
-	spawnEntity(highlightCallback, type, spawnDirection) {
+	/**
+	 * Spawn entity at position if available.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {string} type
+	 * @param {(SpawnPos|string)} spawnPos - <code>"random"</code>, or a
+	 * {@linkcode SpawnPos} object.
+	 */
+	spawnEntity(highlightCallback, type, spawnPos) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
-			this.controller.spawnEntity(callbackCommand, type, spawnDirection);
+			this.controller.spawnEntity(callbackCommand, type, spawnPos);
 		});
 		this.controller.addCommand(callbackCommand);
 	}
-	spawnEntityAt(highlightCallback, type, spawnX, spawnY, spawnDirection) {
+
+	/**
+	 * Spawn entity at position without checking if the it's available.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {string} type
+	 * @param {SpawnPos} spawnPos
+	 */
+	spawnEntityAt(highlightCallback, type, spawnPos) {
 		var callbackCommand=new CallbackCommand(this.controller,highlightCallback, () => {
-			this.controller.spawnEntityAt(callbackCommand,type,spawnX,spawnY, spawnDirection);
+			this.controller.spawnEntityAt(callbackCommand, type, spawnPos.x, spawnPos.y, spawnPos.rot);
 		});
 		this.controller.addCommand(callbackCommand);
 	}
+
+	/**
+	 * Destroy entity by ID.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	destroyEntity(highlightCallback, targetEntity) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.destroyEntity(callbackCommand, targetEntity);
@@ -359,6 +423,12 @@ class CodeOrgAPI {
 		this.controller.addGlobalCommand(callbackCommand);
 	}
 
+	/**
+	 * Drop item from entity.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {string} itemType - Item type as string.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	drop(highlightCallback, itemType, targetEntity) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.drop(callbackCommand, itemType);
@@ -366,6 +436,9 @@ class CodeOrgAPI {
 		this.controller.addCommand(callbackCommand);
 	}
 
+	/**
+	 * @param {highlightCallback} highlightCallback
+	 */
 	startDay(highlightCallback) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.startDay(callbackCommand);
@@ -373,6 +446,9 @@ class CodeOrgAPI {
 		this.controller.addGlobalCommand(callbackCommand);
 	}
 
+	/**
+	 * @param {highlightCallback} highlightCallback
+	 */
 	startNight(highlightCallback) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.startNight(callbackCommand);
@@ -380,6 +456,12 @@ class CodeOrgAPI {
 		this.controller.addGlobalCommand(callbackCommand);
 	}
 
+	/**
+	 * Make an entity wait <code>time</code> seconds.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {number} time - Time in <b>seconds</b>.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	wait(highlightCallback, time, targetEntity) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.wait(callbackCommand, time);
@@ -387,6 +469,11 @@ class CodeOrgAPI {
 		this.controller.addGlobalCommand(callbackCommand);
 	}
 
+	/**
+	 * Make entity attack.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	attack(highlightCallback, targetEntity) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.attack(callbackCommand);
@@ -401,6 +488,12 @@ class CodeOrgAPI {
 		}
 	}
 
+	/**
+	 * Add score points to entity.
+	 * @param {highlightCallback} highlightCallback
+	 * @param {number} score - Score points.
+	 * @param {TargetId} targetEntity - Target entity ID.
+	 */
 	addScore(highlightCallback, score, targetEntity) {
 		var callbackCommand = new CallbackCommand(this.controller, highlightCallback, () => {
 			this.controller.addScore(callbackCommand, score);

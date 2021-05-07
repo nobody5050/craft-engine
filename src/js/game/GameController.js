@@ -25,7 +25,7 @@ class GameController {
 		 * @public {Object} codeOrgAPI - API with externally-callable methods for
 		 * starting an attempt, issuing commands, etc.
 		 */
-		this.codeOrgAPI = CodeOrgAPI(this);
+		this.codeOrgAPI = new CodeOrgAPI(this);
 
 		var Phaser = gameControllerConfig.Phaser;
 
