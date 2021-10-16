@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/craft-devs/craft-engine.git"
+    "url": "https://github.com/RandomSoup/craft-engine.git"
   },
   "author": "craft-devs",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/craft-devs/craft-engine/issues"
+    "url": "https://github.com/RandomSoup/craft-engine/issues"
   },
-  "homepage": "https://github.com/craft-devs/craft-engine#readme",
+  "homepage": "https://github.com/RandomSoup/craft-engine#readme",
   "devDependencies": {
     "@craft-devs/jsdoc-template": "^0.1.1",
     "eslint": "^7.24.0",

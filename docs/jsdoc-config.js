@@ -1,4 +1,4 @@
-"user strict";
+"use strict";
 
 var include_arr = ["API/CodeOrgAPI.js", "Event/EventType.js", "LevelMVC/FacingDirection.js"];
 include_arr = include_arr.map(function (file) {
