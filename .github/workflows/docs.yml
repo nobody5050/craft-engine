@@ -1,4 +1,4 @@
-name: GitHub Pages
+name: API Documentation
 
 # Controls when the action will run. 
 on:
@@ -24,11 +24,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build demo
-        run: npm run build-prod
+      - name: Build docs
+        run: npm run docs
 
-      - name: Push to gh-pages
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+      - name: Push docs
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: build # The folder the action should deploy.
+          source-directory: 'docs/out'
+          destination-github-username: 'RandomSoup'
+          destination-repository-name: 'craft-docs'
+          user-email: donfrutosgomez@gmail.com
+          target-branch: master
